@@ -90,3 +90,47 @@ apiServer.post("/Delete", (request, response) => {;
     response.send("credenziali account da eliminare: " + request.body.username + " " + request.body.password);
 
 });
+
+apiServer.get("/AdminLogin", (request, response) => {
+    response.sendFile(__dirname + '/Pagine/AdminLogin.html');
+});
+
+apiServer.post("/VerifyAdminLogin", (request, response)=>{
+    
+    fs.readFile("libJson/Adminaccount.json", (err, data) => {
+        if (err) {
+          console.log("error: " + err);
+        } else {
+            var students = JSON.parse(data);
+            if (students.find(x => x.username === request.body.username) && students.find(x => x.password === request.body.password)){
+                response.sendFile(__dirname + '/Pagine/AdminMenu.html');
+            }else{
+                response.send("Credenziali errate");
+            }
+        };
+      });   
+});
+
+apiServer.get("/addMeet", (request, response) => {
+    response.sendFile(__dirname + '/Pagine/newMeet.html');
+});
+
+apiServer.post("/newMeet", (request, response) => {
+    fs.readFile("libJson/meet.json", (err,data)=>{
+        if(err){
+            console.log("err:"+err);
+
+        }else{
+            var meet = JSON.parse(data);
+            meet.push({"Nome":request.body.Nome,"ODG":request.body.ODG,"Data":request.body.Data,"Ora":request.body.Ora});
+            fs.writeFile("libJson/meet.json", JSON.stringify(meet), (err) =>{
+                if(err){
+                    console.log("err:"+err);
+                }
+            })
+        }
+
+    });
+    response.sendFile(__dirname + '/Pagine/AdminMenu.html');
+
+});
