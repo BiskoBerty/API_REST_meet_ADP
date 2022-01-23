@@ -65,3 +65,28 @@ apiServer.post("/VerifyLogin", (request, response)=>{
         };
       });   
 });
+
+apiServer.get("/Gruppo", (request, response) => {
+    response.send("");
+});
+
+apiServer.get("/CalendarioMeet", (request, response) => {
+    fs.readFile("libJson/meet.json", (err, data) => {
+        if (err) {
+          console.log("error: " + err);
+        } else {
+            var meet = JSON.parse(data);
+            response.send(JSON.stringify(meet, null, 2));
+        }
+        
+      });
+});
+
+apiServer.get("/Elimina", (request, response) => {
+    response.sendFile(__dirname + '/Pagine/Elimina.html');
+});
+
+apiServer.post("/Delete", (request, response) => {;
+    response.send("credenziali account da eliminare: " + request.body.username + " " + request.body.password);
+
+});
