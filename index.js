@@ -37,3 +37,31 @@ apiServer.post("/NewRegistrazione", (request, response) => {
     response.sendFile(__dirname + '/Pagine/Login.html');
 
 });
+
+apiServer.get("/Login", (request, response) => {
+    fs.readFile("libJson/meet.json", (err, data) => {
+        if (err) {
+          console.log("error: " + err);
+        } else {
+            var meet = JSON.parse(data);
+            response.sendFile(__dirname + '/Pagine/Login.html');
+        }
+        
+      });
+});
+
+apiServer.post("/VerifyLogin", (request, response)=>{
+    
+    fs.readFile("libJson/account.json", (err, data) => {
+        if (err) {
+          console.log("error: " + err);
+        } else {
+            var students = JSON.parse(data);
+            if (students.find(x => x.username === request.body.username) && students.find(x => x.password === request.body.password)){
+                response.sendFile(__dirname + '/Pagine/Menu.html');
+            }else{
+                response.send("Credenziali errate");
+            }
+        };
+      });   
+});
